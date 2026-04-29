@@ -64,6 +64,23 @@ export default function ExpenseTracker() {
   const [filterCategory, setFilterCategory] = useState('all');
   const [sortBy, setSortBy] = useState('date-desc');
 
+  // Lock body scroll when any modal is open
+  useEffect(() => {
+    const anyModalOpen = showExpenseModal || showCategoryModal || showSalaryModal;
+    if (anyModalOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      return () => {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [showExpenseModal, showCategoryModal, showSalaryModal]);
+
   // Save to localStorage whenever important data changes
   useEffect(() => {
     saveToStorage({
@@ -804,9 +821,9 @@ function ExpenseModal({ expense, categories, theme, onSave, onClose, currentDate
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-4" onClick={onClose} style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)' }}>
-      <div className={`${theme.glassSolid} ${theme.shadow} border rounded-t-[32px] sm:rounded-[32px] w-full max-w-md shadow-2xl`} onClick={(e) => e.stopPropagation()}>
-        <div className="p-6">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-end sm:items-center justify-center sm:p-4 overflow-hidden" onClick={onClose}>
+      <div className={`${theme.glassSolid} ${theme.shadow} border rounded-t-[32px] sm:rounded-[32px] w-full max-w-md shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[90vh]`} onClick={(e) => e.stopPropagation()}>
+        <div className="overflow-y-auto overscroll-contain p-6" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1.5rem)' }}>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-bold">{expense ? 'Edit expense' : 'New expense'}</h2>
             <button onClick={onClose} className={`w-10 h-10 rounded-full ${theme.accent} ${theme.glassHover} flex items-center justify-center active:scale-95`}>
@@ -872,9 +889,9 @@ function CategoryModal({ category, theme, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-4" onClick={onClose} style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)' }}>
-      <div className={`${theme.glassSolid} ${theme.shadow} border rounded-t-[32px] sm:rounded-[32px] w-full max-w-md shadow-2xl`} onClick={(e) => e.stopPropagation()}>
-        <div className="p-6">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-end sm:items-center justify-center sm:p-4 overflow-hidden" onClick={onClose}>
+      <div className={`${theme.glassSolid} ${theme.shadow} border rounded-t-[32px] sm:rounded-[32px] w-full max-w-md shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[90vh]`} onClick={(e) => e.stopPropagation()}>
+        <div className="overflow-y-auto overscroll-contain p-6" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1.5rem)' }}>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-bold">{category ? 'Edit category' : 'New category'}</h2>
             <button onClick={onClose} className={`w-10 h-10 rounded-full ${theme.accent} ${theme.glassHover} flex items-center justify-center active:scale-95`}>
@@ -929,9 +946,9 @@ function SalaryModal({ currentSalary, defaultSalary, monthName, hasCustom, theme
   const [defaultVal, setDefaultVal] = useState(defaultSalary);
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-4" onClick={onClose} style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1rem)' }}>
-      <div className={`${theme.glassSolid} ${theme.shadow} border rounded-t-[32px] sm:rounded-[32px] w-full max-w-md shadow-2xl`} onClick={(e) => e.stopPropagation()}>
-        <div className="p-6">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-end sm:items-center justify-center sm:p-4 overflow-hidden" onClick={onClose}>
+      <div className={`${theme.glassSolid} ${theme.shadow} border rounded-t-[32px] sm:rounded-[32px] w-full max-w-md shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[90vh]`} onClick={(e) => e.stopPropagation()}>
+        <div className="overflow-y-auto overscroll-contain p-6" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 1.5rem)' }}>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-bold">Income</h2>
             <button onClick={onClose} className={`w-10 h-10 rounded-full ${theme.accent} ${theme.glassHover} flex items-center justify-center active:scale-95`}>
